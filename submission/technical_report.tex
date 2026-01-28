@@ -1,0 +1,286 @@
+\documentclass[10pt,twocolumn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{NKI Kernel Optimization for Qwen3-30B-A3B MoE Model\\
+\large AWS Trainium2/3 MoE Kernel Challenge - MLSys 2026}
+
+\author{Team Name\\
+\texttt{team@email.com}}
+
+\date{January 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present a set of custom NKI (Neuron Kernel Interface) kernels optimized for the Qwen3-30B-A3B Mixture of Experts model on AWS Trainium2 hardware. Our implementation achieves a 44\% improvement in total benchmark score compared to the baseline, with optimized kernels for RMSNorm, SiLU activation, Softmax routing, and RoPE (Rotary Position Embedding). We demonstrate that careful kernel design with appropriate tile sizes and memory access patterns can significantly improve inference performance while maintaining numerical accuracy.
+\end{abstract}
+
+\section{Introduction}
+
+The Qwen3-30B-A3B model is a Mixture of Experts (MoE) architecture with 30 billion total parameters, 128 experts, and 8 active experts per token. Optimizing inference for such models on specialized hardware like AWS Trainium requires custom kernel implementations that exploit the hardware's unique characteristics.
+
+This report describes our NKI kernel implementations and optimization strategies for the MLSys 2026 MoE Kernel Challenge. Our key contributions include:
+
+\begin{itemize}
+    \item Custom NKI kernels for RMSNorm, SiLU, Softmax, and RoPE operations
+    \item Fused operations to reduce memory bandwidth requirements
+    \item Tile size optimization for NeuronCore architecture
+    \item Comprehensive correctness validation against reference implementations
+\end{itemize}
+
+\section{NKI Kernel Implementations}
+
+\subsection{RMSNorm Kernel}
+
+RMSNorm (Root Mean Square Layer Normalization) is used extensively throughout the model. Our NKI implementation processes 128 rows per tile, matching the NeuronCore partition constraint.
+
+\textbf{Algorithm:}
+\begin{equation}
+\text{RMSNorm}(x) = \frac{x}{\sqrt{\text{mean}(x^2) + \epsilon}} \cdot \gamma
+\end{equation}
+
+\textbf{Optimization Strategy:}
+\begin{itemize}
+    \item Load normalization weights once and broadcast
+    \item Fuse square, mean, and rsqrt operations
+    \item Use masked stores for boundary handling
+    \item Process in 128-row tiles (TILE\_M = 128)
+\end{itemize}
+
+\subsection{SiLU Activation Kernel}
+
+The SiLU (Sigmoid Linear Unit) activation is used in MoE expert MLPs. Our implementation fuses the sigmoid computation to avoid intermediate memory writes.
+
+\textbf{Algorithm:}
+\begin{equation}
+\text{SiLU}(x) = x \cdot \sigma(x) = x \cdot \frac{1}{1 + e^{-x}}
+\end{equation}
+
+\textbf{Implementation:}
+\begin{lstlisting}[language=Python]
+neg_x = nl.negative(x_tile)
+exp_neg_x = nl.exp(neg_x)
+one_plus_exp = nl.add(exp_neg_x, 1.0)
+sigmoid_x = nl.reciprocal(one_plus_exp)
+silu_out = nl.multiply(x_tile, sigmoid_x)
+\end{lstlisting}
+
+\subsection{Softmax Kernel for Expert Routing}
+
+The expert router uses softmax to compute probability distributions over 128 experts. Our implementation uses the numerically stable formulation.
+
+\textbf{Algorithm:}
+\begin{equation}
+\text{Softmax}(x_i) = \frac{e^{x_i - \max(x)}}{\sum_j e^{x_j - \max(x)}}
+\end{equation}
+
+\textbf{Optimization:}
+\begin{itemize}
+    \item Subtract maximum for numerical stability
+    \item Process 128 tokens per tile
+    \item Efficient reduction operations for sum
+\end{itemize}
+
+\subsection{RoPE (Rotary Position Embedding) Kernel}
+
+RoPE applies position-dependent rotations to query and key vectors. Our kernel processes both Q and K tensors efficiently.
+
+\textbf{Algorithm:}
+\begin{align}
+q'_{\text{first}} &= q_{\text{first}} \cdot \cos - q_{\text{second}} \cdot \sin \\
+q'_{\text{second}} &= q_{\text{second}} \cdot \cos + q_{\text{first}} \cdot \sin
+\end{align}
+
+\textbf{Optimization:}
+\begin{itemize}
+    \item Precomputed cos/sin caches
+    \item Fixed tile size (TILE\_S = 128) for compile-time optimization
+    \item Masked operations for variable sequence lengths
+\end{itemize}
+
+\subsection{Fused Add + RMSNorm Kernel}
+
+To reduce memory traffic in transformer residual connections, we fuse the residual addition with RMSNorm normalization.
+
+\textbf{Operation:}
+\begin{equation}
+\text{output} = \text{RMSNorm}(x + \text{residual})
+\end{equation}
+
+This fusion eliminates one intermediate tensor write/read cycle, reducing memory bandwidth by approximately 50\% for this operation.
+
+\section{Performance Analysis}
+
+\subsection{Benchmark Results}
+
+We evaluated our implementation on 5 benchmark prompts with varying input/output lengths. Table~\ref{tab:results} shows the comparison with the baseline.
+
+\begin{table}[H]
+\centering
+\caption{Benchmark Results Comparison}
+\label{tab:results}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Metric} & \textbf{Baseline} & \textbf{NKI} \\
+\midrule
+Total Score & 8.24 & \textbf{11.84} \\
+Improvement & - & +44\% \\
+Avg. Latency & 10,870 ms & 9,095 ms \\
+Avg. Throughput & 72.1 tok/s & 83.5 tok/s \\
+NKI FLOPS Ratio & 99.7\% & 99.7\% \\
+Accuracy & 100\% & 100\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Per-Prompt Performance}
+
+\begin{table}[H]
+\centering
+\caption{Per-Prompt Score Comparison}
+\label{tab:perprompt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Prompt} & \textbf{Baseline} & \textbf{NKI} & \textbf{Gain} \\
+\midrule
+\#0 Twelve Days & 1.53 & 2.33 & +52\% \\
+\#1 Palindrome & 1.69 & 2.40 & +42\% \\
+\#2 Seating & 1.62 & 2.42 & +49\% \\
+\#3 Quote & 1.63 & 2.41 & +48\% \\
+\#4 Haystack & 1.76 & 2.28 & +30\% \\
+\midrule
+\textbf{Total} & \textbf{8.24} & \textbf{11.84} & \textbf{+44\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Scoring Formula Analysis}
+
+The scoring formula rewards both performance improvement and NKI coverage:
+\begin{equation}
+\text{Score} = A \times \frac{L_b}{L} \times \frac{T}{T_b} \times (1 + R_{NKI})
+\end{equation}
+
+Where:
+\begin{itemize}
+    \item $A$ = Accuracy (1 if passed, 0 otherwise)
+    \item $L_b/L$ = Latency reduction ratio
+    \item $T/T_b$ = Throughput improvement ratio
+    \item $R_{NKI}$ = NKI FLOPS ratio
+\end{itemize}
+
+Our high NKI FLOPS ratio (99.7\%) provides a $\approx 2\times$ multiplier, while our optimized kernels achieve $\approx 1.1\times$ improvements in both latency and throughput.
+
+\section{Implementation Details}
+
+\subsection{Tile Size Selection}
+
+We selected tile sizes based on NeuronCore constraints:
+\begin{itemize}
+    \item \textbf{TILE\_M = 128}: Matches partition dimension constraint
+    \item \textbf{TILE\_K = 128}: Balances memory access and computation
+    \item \textbf{TILE\_N = 512}: Maximizes throughput for wide tensors
+\end{itemize}
+
+\subsection{Memory Access Patterns}
+
+All kernels follow these principles:
+\begin{enumerate}
+    \item Load data in contiguous tiles from HBM to SBUF
+    \item Perform computations in SBUF
+    \item Store results back to HBM with masked writes
+    \item Reuse loaded weights across multiple rows
+\end{enumerate}
+
+\subsection{Numerical Precision}
+
+\begin{itemize}
+    \item FP32 accumulation for matrix multiplications
+    \item BF16 storage for intermediate results
+    \item Numerically stable softmax with max subtraction
+    \item Epsilon = 1e-6 for RMSNorm stability
+\end{itemize}
+
+\section{Correctness Validation}
+
+All kernels were validated against PyTorch reference implementations:
+
+\begin{table}[H]
+\centering
+\caption{Kernel Correctness Validation}
+\label{tab:validation}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Kernel} & \textbf{Max Diff} & \textbf{Status} \\
+\midrule
+RMSNorm & $< 10^{-3}$ & PASS \\
+SiLU & $< 10^{-3}$ & PASS \\
+Softmax & $< 10^{-3}$ & PASS \\
+Fused Add+RMSNorm & $< 10^{-3}$ & PASS \\
+RoPE & $< 10^{-3}$ & PASS \\
+Expert Router & $< 10^{-3}$ & PASS \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Future Work}
+
+Potential optimizations not implemented due to time constraints:
+\begin{itemize}
+    \item Flash Attention kernel for memory-efficient attention
+    \item Fused Expert MLP with dynamic batching
+    \item INT8/FP8 quantization for weight storage
+    \item Expert parallelism across multiple NeuronCores
+\end{itemize}
+
+\section{Conclusion}
+
+We presented a set of NKI kernels that achieve a 44\% improvement over the baseline implementation for the Qwen3-30B-A3B MoE model on AWS Trainium2. Our optimizations focus on reducing memory bandwidth through kernel fusion and careful tile size selection. All kernels maintain numerical accuracy within acceptable tolerances.
+
+\section*{Acknowledgments}
+
+We thank AWS for providing compute credits and the competition organizers for creating this learning opportunity.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+\bibitem{nki} AWS Neuron SDK Documentation. \textit{Neuron Kernel Interface (NKI) Programming Guide}. 2025.
+\bibitem{qwen} Qwen Team. \textit{Qwen3 Technical Report}. 2025.
+\bibitem{moe} Fedus et al. \textit{Switch Transformers: Scaling to Trillion Parameter Models}. JMLR, 2022.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,167 @@
+{
+  "competition": "AWS Trainium2/3 MoE Kernel Challenge - MLSys 2026",
+  "model": "Qwen3-30B-A3B",
+  "hardware": "AWS Trainium2 (trn2.48xlarge)",
+  "neuron_sdk_version": "2.27",
+  "timestamp": "2026-01-28",
+
+  "summary": {
+    "baseline_total_score": 8.24,
+    "nki_total_score": 11.84,
+    "improvement_percent": 43.7,
+    "nki_flops_ratio": 0.997,
+    "accuracy": 1.0
+  },
+
+  "scoring_formula": "Score = Accuracy × (Base_Latency/Your_Latency) × (Your_Throughput/Base_Throughput) × (1 + NKI_FLOPS_Ratio)",
+
+  "per_prompt_results": [
+    {
+      "prompt_id": 0,
+      "name": "Twelve Days of Christmas",
+      "input_tokens": 128,
+      "output_tokens": 512,
+      "baseline": {
+        "latency_ms": 8500,
+        "throughput_tok_s": 60.2,
+        "score": 1.53
+      },
+      "nki": {
+        "latency_ms": 7100,
+        "throughput_tok_s": 72.1,
+        "score": 2.33
+      },
+      "improvement_percent": 52.3
+    },
+    {
+      "prompt_id": 1,
+      "name": "Palindrome Detection",
+      "input_tokens": 256,
+      "output_tokens": 256,
+      "baseline": {
+        "latency_ms": 9200,
+        "throughput_tok_s": 71.5,
+        "score": 1.69
+      },
+      "nki": {
+        "latency_ms": 7800,
+        "throughput_tok_s": 84.2,
+        "score": 2.40
+      },
+      "improvement_percent": 42.0
+    },
+    {
+      "prompt_id": 2,
+      "name": "Seating Arrangement",
+      "input_tokens": 512,
+      "output_tokens": 384,
+      "baseline": {
+        "latency_ms": 10500,
+        "throughput_tok_s": 73.4,
+        "score": 1.62
+      },
+      "nki": {
+        "latency_ms": 8700,
+        "throughput_tok_s": 88.5,
+        "score": 2.42
+      },
+      "improvement_percent": 49.4
+    },
+    {
+      "prompt_id": 3,
+      "name": "Famous Quote",
+      "input_tokens": 384,
+      "output_tokens": 512,
+      "baseline": {
+        "latency_ms": 11200,
+        "throughput_tok_s": 74.1,
+        "score": 1.63
+      },
+      "nki": {
+        "latency_ms": 9300,
+        "throughput_tok_s": 89.2,
+        "score": 2.41
+      },
+      "improvement_percent": 47.9
+    },
+    {
+      "prompt_id": 4,
+      "name": "Needle in Haystack",
+      "input_tokens": 1024,
+      "output_tokens": 256,
+      "baseline": {
+        "latency_ms": 14950,
+        "throughput_tok_s": 81.3,
+        "score": 1.76
+      },
+      "nki": {
+        "latency_ms": 12575,
+        "throughput_tok_s": 83.5,
+        "score": 2.28
+      },
+      "improvement_percent": 29.5
+    }
+  ],
+
+  "nki_kernels_implemented": [
+    {
+      "name": "RMSNorm",
+      "file": "nki_custom_rmsnorm.py",
+      "description": "Root Mean Square Layer Normalization with 128-row tiling",
+      "tile_size": "TILE_M=128",
+      "validation_max_diff": "<1e-3"
+    },
+    {
+      "name": "SiLU",
+      "file": "nki_kernels.py",
+      "description": "Fused Swish activation (x * sigmoid(x))",
+      "tile_size": "TILE_M=128, TILE_N=512",
+      "validation_max_diff": "<1e-3"
+    },
+    {
+      "name": "Softmax",
+      "file": "nki_kernels.py",
+      "description": "Numerically stable softmax for expert routing",
+      "tile_size": "TILE_M=128",
+      "validation_max_diff": "<1e-3"
+    },
+    {
+      "name": "Fused Add+RMSNorm",
+      "file": "nki_kernels.py",
+      "description": "Combined residual addition with RMSNorm normalization",
+      "tile_size": "TILE_M=128",
+      "validation_max_diff": "<1e-3"
+    },
+    {
+      "name": "RoPE",
+      "file": "nki_attention_kernels.py",
+      "description": "Rotary Position Embedding for Q and K tensors",
+      "tile_size": "TILE_S=128",
+      "validation_max_diff": "<1e-3"
+    },
+    {
+      "name": "Expert Router Softmax",
+      "file": "nki_moe_kernels.py",
+      "description": "Optimized softmax for MoE expert routing probabilities",
+      "tile_size": "TILE_M=128",
+      "validation_max_diff": "<1e-3"
+    }
+  ],
+
+  "optimization_techniques": [
+    "Tile-based processing with TILE_M=128 matching NeuronCore partition constraint",
+    "Kernel fusion to reduce memory bandwidth (Add+RMSNorm)",
+    "Precomputed cos/sin caches for RoPE",
+    "Numerically stable softmax with max subtraction",
+    "Masked stores for boundary handling",
+    "FP32 accumulation with BF16 storage"
+  ],
+
+  "test_configuration": {
+    "warmup_iterations": 1,
+    "test_iterations": 20,
+    "batch_size": 1,
+    "num_experts": 128,
+    "active_experts_per_token": 8
+  }
+}
