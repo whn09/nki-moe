@@ -1,0 +1,495 @@
+python3 main.py \
+    --mode evaluate_all \
+    --model-path ~/qwen-30b-a3b/hf_model \
+    --compiled-model-path ~/qwen-30b-a3b/traced_model_baseline \
+    --skip-compile True
+
+Neuron: Warmup completed in 2.077263593673706 seconds.
+Beginning benchmark sampling
+Benchmark completed and its result is as following
+{
+    "e2e_model": {
+        "latency_ms_p50": 13922.179818153381,
+        "latency_ms_p90": 13958.235549926758,
+        "latency_ms_p95": 13995.421957969667,
+        "latency_ms_p99": 14505.56098461151,
+        "latency_ms_p100": 14633.095741271973,
+        "latency_ms_avg": 13886.851787567139,
+        "throughput": 46.08675960472123
+    },
+    "context_encoding_model": {
+        "latency_ms_p50": 405.70664405822754,
+        "latency_ms_p90": 406.0128450393677,
+        "latency_ms_p95": 406.05270862579346,
+        "latency_ms_p99": 406.0943841934204,
+        "latency_ms_p100": 406.10480308532715,
+        "latency_ms_avg": 405.73734045028687,
+        "throughput": 49.29297357202574
+    },
+    "token_generation_model": {
+        "latency_ms_p50": 14.60123062133789,
+        "latency_ms_p90": 14.807939529418945,
+        "latency_ms_p95": 14.862775802612305,
+        "latency_ms_p99": 14.964442253112793,
+        "latency_ms_p100": 15.722990036010742,
+        "latency_ms_avg": 14.632805117882896,
+        "throughput": 68.44999990201569
+    }
+}
+Completed saving result to benchmark_report.json
+Found your HLOs
+In this final score of  1.5288297450333526  the contestant got a breakdown as follows.
+accuracy:  1
+reduced_latency:  0.8616005967131318
+increased throughput:  0.8886764289379335
+nki flop ratio:  0.9966846147845622
+Prompt: How many gifts do I get after the Twelve Days of Christmas? Express this as a mathematical formula.
+Final Score: 1.5288297450333526
+        Accuracy: 1
+        Latency: 14505.56098461151
+        Throughput: 46.08675960472123
+        NKI FLOPs Ratio: 0.9966846147845622
+Beginning benchmark sampling
+Benchmark completed and its result is as following
+{
+    "e2e_model": {
+        "latency_ms_p50": 10054.233074188232,
+        "latency_ms_p90": 10083.41269493103,
+        "latency_ms_p95": 10116.233003139496,
+        "latency_ms_p99": 10155.507876873016,
+        "latency_ms_p100": 10165.326595306396,
+        "latency_ms_avg": 9988.702273368835,
+        "throughput": 64.07238723155483
+    },
+    "context_encoding_model": {
+        "latency_ms_p50": 421.2017059326172,
+        "latency_ms_p90": 421.3184356689453,
+        "latency_ms_p95": 421.35512828826904,
+        "latency_ms_p99": 421.63236141204834,
+        "latency_ms_p100": 421.70166969299316,
+        "latency_ms_avg": 421.21492624282837,
+        "throughput": 455.82430260154865
+    },
+    "token_generation_model": {
+        "latency_ms_p50": 14.586687088012695,
+        "latency_ms_p90": 14.716625213623047,
+        "latency_ms_p95": 14.751207828521729,
+        "latency_ms_p99": 14.804799556732178,
+        "latency_ms_p100": 19.257307052612305,
+        "latency_ms_avg": 14.601902940395961,
+        "throughput": 68.6374331178883
+    }
+}
+Completed saving result to benchmark_report.json
+Found your HLOs
+In this final score of  1.6916354092128452  the contestant got a breakdown as follows.
+accuracy:  1
+reduced_latency:  0.9287758046527426
+increased throughput:  0.9121923011326144
+nki flop ratio:  0.9966846147845622
+Prompt: Create a function that takes a string as input and returns the longest palindromic substring within that string. A palindrome is a word, phrase, number, or other sequence of characters that reads the same forward and backward, disregarding spaces, punctuation, and capitalization.
+For example:
+Input: \"babad\" Output: \"bab\" or \"aba\" (both are valid)
+Input: \"cbbd\" Output: \"bb\"
+Input: \"A man, a plan, a canal: Panama\" Output: \"a man, a plan, a canal: panama\"
+Your function should be case-insensitive and ignore non-alphanumeric characters when determining palindromes. The function should be efficient and able to handle strings of up to 1000 characters in length.
+Provide your solution along with an explanation of your approach and its time complexity. Write a version that has lower time complexity than O(n^2).
+Final Score: 1.6916354092128452
+        Accuracy: 1
+        Latency: 10155.507876873016
+        Throughput: 64.07238723155483
+        NKI FLOPs Ratio: 0.9966846147845622
+Beginning benchmark sampling
+Benchmark completed and its result is as following
+{
+    "e2e_model": {
+        "latency_ms_p50": 13204.514026641846,
+        "latency_ms_p90": 13249.228930473328,
+        "latency_ms_p95": 13251.085877418518,
+        "latency_ms_p99": 13267.931866645813,
+        "latency_ms_p100": 13272.143363952637,
+        "latency_ms_avg": 13193.716299533844,
+        "throughput": 48.50794010347276
+    },
+    "context_encoding_model": {
+        "latency_ms_p50": 405.2917957305908,
+        "latency_ms_p90": 405.4178237915039,
+        "latency_ms_p95": 405.50224781036377,
+        "latency_ms_p99": 405.59175968170166,
+        "latency_ms_p100": 405.61413764953613,
+        "latency_ms_avg": 405.30582666397095,
+        "throughput": 133.23272562960233
+    },
+    "token_generation_model": {
+        "latency_ms_p50": 14.580488204956055,
+        "latency_ms_p90": 14.680624008178711,
+        "latency_ms_p95": 14.757168292999268,
+        "latency_ms_p99": 14.800074100494385,
+        "latency_ms_p100": 15.10000228881836,
+        "latency_ms_avg": 14.584364503876776,
+        "throughput": 68.68378813784653
+    }
+}
+Completed saving result to benchmark_report.json
+Found your HLOs
+In this final score of  1.622233715891531  the contestant got a breakdown as follows.
+accuracy:  1
+reduced_latency:  0.9111502924122392
+increased throughput:  0.8916900754314846
+nki flop ratio:  0.9966846147845622
+Prompt: Five friends sit in a row facing north:
+Alex sits next to Beth.
+Beth sits next to Chen.
+Diana is not at any end.
+Elena sits between two people.
+Chen is not next to Diana.
+Determine the seating order and explain your logic.
+Final Score: 1.622233715891531
+        Accuracy: 1
+        Latency: 13267.931866645813
+        Throughput: 48.50794010347276
+        NKI FLOPs Ratio: 0.9966846147845622
+Beginning benchmark sampling
+
+Benchmark completed and its result is as following
+{
+    "e2e_model": {
+        "latency_ms_p50": 14055.773377418518,
+        "latency_ms_p90": 14143.212246894836,
+        "latency_ms_p95": 14150.4465341568,
+        "latency_ms_p99": 14156.471371650696,
+        "latency_ms_p100": 14157.97758102417,
+        "latency_ms_avg": 14002.658128738403,
+        "throughput": 45.70560775789375
+    },
+    "context_encoding_model": {
+        "latency_ms_p50": 405.50291538238525,
+        "latency_ms_p90": 405.7033061981201,
+        "latency_ms_p95": 405.7232737541199,
+        "latency_ms_p99": 405.7984709739685,
+        "latency_ms_p100": 405.81727027893066,
+        "latency_ms_avg": 405.5366277694702,
+        "throughput": 34.52215913764117
+    },
+    "token_generation_model": {
+        "latency_ms_p50": 14.604806900024414,
+        "latency_ms_p90": 14.75834846496582,
+        "latency_ms_p95": 14.78123664855957,
+        "latency_ms_p99": 14.83130693435669,
+        "latency_ms_p100": 19.856929779052734,
+        "latency_ms_avg": 14.619849147796632,
+        "throughput": 68.50959882516653
+    }
+}
+Completed saving result to benchmark_report.json
+Found your HLOs
+In this final score of  1.6301409527377075  the contestant got a breakdown as follows.
+accuracy:  1
+reduced_latency:  0.9090309062306582
+increased throughput:  0.8981255208861024
+nki flop ratio:  0.9966846147845622
+Prompt: Explain the quote \"I do desire we may be better strangers\"
+Final Score: 1.6301409527377075
+        Accuracy: 1
+        Latency: 14156.471371650696
+        Throughput: 45.70560775789375
+        NKI FLOPs Ratio: 0.9966846147845622
+Beginning benchmark sampling
+Benchmark completed and its result is as following
+{
+    "e2e_model": {
+        "latency_ms_p50": 3136.175274848938,
+        "latency_ms_p90": 3190.391993522644,
+        "latency_ms_p95": 3194.9663400650024,
+        "latency_ms_p99": 3222.0993089675903,
+        "latency_ms_p100": 3228.8825511932373,
+        "latency_ms_avg": 3139.858567714691,
+        "throughput": 203.83083702582707
+    },
+    "context_encoding_model": {
+        "latency_ms_p50": 457.52251148223877,
+        "latency_ms_p90": 457.6146364212036,
+        "latency_ms_p95": 457.6725721359253,
+        "latency_ms_p99": 457.6758337020874,
+        "latency_ms_p100": 457.67664909362793,
+        "latency_ms_avg": 457.5154662132263,
+        "throughput": 1119.0878512539311
+    },
+    "token_generation_model": {
+        "latency_ms_p50": 14.56594467163086,
+        "latency_ms_p90": 14.617466926574707,
+        "latency_ms_p95": 14.638209342956543,
+        "latency_ms_p99": 14.729588031768799,
+        "latency_ms_p100": 14.816999435424805,
+        "latency_ms_avg": 14.561169917189229,
+        "throughput": 69.2165548153004
+    }
+}
+Completed saving result to benchmark_report.json
+Found your HLOs
+In this final score of  1.7646151656574078  the contestant got a breakdown as follows.
+accuracy:  1
+reduced_latency:  0.9440801503336276
+increased throughput:  0.9361203133362132
+nki flop ratio:  0.9966846147845622
+Prompt: You are a close-reading bot with a great memory who answers questions for users. I'm going to give you the text of an essay. Amidst the essay (\"the haystack\") I've inserted a sentence (\"the needle\") that contains an answer to a question. 
+Here's the question: \"What is the best thing to do in San Francisco?\"
+Here's the text of the essay. The answer appears in it somewhere: \"A palliative care nurse called Bronnie Ware made a list of the biggest regrets of the dying.  Her list seems plausible.  I could see myself — can see myself — making at least 4 of these 5 mistakes. If you had to compress them into a single piece of advice, it might be: don't be a cog.  The 5 regrets paint a portrait of post-industrial man, who shrinks himself into a shape that fits his circumstances, then turns dutifully till he stops. The alarming thing is, the mistakes that produce these regrets are all errors of omission. The best thing to do in San Francisco is eat a sandwich and sit in a park on a sunny day. You forget your dreams, ignore your family, suppress your feelings, neglect your friends, and forget to be happy. Errors of omission are a particularly dangerous type of mistake, because you make them by default. I would like to avoid making these mistakes.  But how do you avoid mistakes you make by default?  Ideally you transform your life so it has other defaults.  But it may not be possible to do that completely. As long as these mistakes happen by default, you probably have to be reminded not to make them.  So I inverted the 5 regrets, yielding a list of 5 commandsDon't ignore your dreams; don't work too much; say what youthink; cultivate friendships; be happy.which I then put at the top of the file I use as a todo list.\"
+Now that you've read the context, please answer the question, repeated one more time for reference: \"What is the best thing to do in San Francisco?\"
+To do so, first find the sentence from the haystack that contains the answer (there is such a sentence, I promise!) and put it inside <most_relevant_sentence> XML tags. Then, put your answer in <answer> tags. Base your answer strictly on the context, without reference to outside information. Thank you. If you can't find the answer return the single word UNANSWERABLE.
+Final Score: 1.7646151656574078
+        Accuracy: 1
+        Latency: 3222.0993089675903
+        Throughput: 203.83083702582707
+        NKI FLOPs Ratio: 0.9966846147845622
+
+Total Score: 8.237454988532845
+
+
+
+python3 main.py \
+    --mode evaluate_all \
+    --enable-nki \
+    --model-path ~/qwen-30b-a3b/hf_model \
+    --compiled-model-path ~/qwen-30b-a3b/traced_model \
+    --skip-compile True 
+
+Neuron: Warmup completed in 2.1800036430358887 seconds.
+Beginning benchmark sampling
+Benchmark completed and its result is as following
+{
+    "e2e_model": {
+        "latency_ms_p50": 11518.35298538208,
+        "latency_ms_p90": 11531.931138038635,
+        "latency_ms_p95": 11532.250916957855,
+        "latency_ms_p99": 11535.255725383759,
+        "latency_ms_p100": 11536.006927490234,
+        "latency_ms_avg": 11476.203346252441,
+        "throughput": 55.76757231379943
+    },
+    "context_encoding_model": {
+        "latency_ms_p50": 467.58341789245605,
+        "latency_ms_p90": 467.9316759109497,
+        "latency_ms_p95": 468.0341958999634,
+        "latency_ms_p99": 468.1998109817505,
+        "latency_ms_p100": 468.24121475219727,
+        "latency_ms_avg": 467.6442861557007,
+        "throughput": 42.767549165223976
+    },
+    "token_generation_model": {
+        "latency_ms_p50": 10.698795318603516,
+        "latency_ms_p90": 10.759830474853516,
+        "latency_ms_p95": 10.777473449707031,
+        "latency_ms_p99": 10.868360996246338,
+        "latency_ms_p100": 11.890888214111328,
+        "latency_ms_avg": 10.613120083662535,
+        "throughput": 94.37521680614456
+    }
+}
+Completed saving result to benchmark_report.json
+Found your HLOs
+In this final score of  2.3263335909073106  the contestant got a breakdown as follows.
+accuracy:  1
+reduced_latency:  1.0834610257055408
+increased throughput:  1.0753484827188475
+nki flop ratio:  0.9966846147845622
+Prompt: How many gifts do I get after the Twelve Days of Christmas? Express this as a mathematical formula.
+Final Score: 2.3263335909073106
+        Accuracy: 1
+        Latency: 11535.255725383759
+        Throughput: 55.76757231379943
+        NKI FLOPs Ratio: 0.9966846147845622
+Beginning benchmark sampling
+Benchmark completed and its result is as following
+{
+    "e2e_model": {
+        "latency_ms_p50": 8432.401895523071,
+        "latency_ms_p90": 8459.561347961426,
+        "latency_ms_p95": 8498.004150390625,
+        "latency_ms_p99": 8505.722465515137,
+        "latency_ms_p100": 8507.652044296265,
+        "latency_ms_avg": 8408.957493305206,
+        "throughput": 76.10931563270907
+    },
+    "context_encoding_model": {
+        "latency_ms_p50": 467.84424781799316,
+        "latency_ms_p90": 468.0036783218384,
+        "latency_ms_p95": 468.0840492248535,
+        "latency_ms_p99": 468.20653915405273,
+        "latency_ms_p100": 468.23716163635254,
+        "latency_ms_avg": 467.86566972732544,
+        "throughput": 410.3742001671091
+    },
+    "token_generation_model": {
+        "latency_ms_p50": 10.700702667236328,
+        "latency_ms_p90": 10.754585266113281,
+        "latency_ms_p95": 10.785603523254395,
+        "latency_ms_p99": 10.888006687164307,
+        "latency_ms_p100": 11.262178421020508,
+        "latency_ms_avg": 10.669940856745846,
+        "throughput": 93.93089895448493
+    }
+}
+Completed saving result to benchmark_report.json
+Found your HLOs
+In this final score of  2.3991871021943205  the contestant got a breakdown as follows.
+accuracy:  1
+reduced_latency:  1.1089228502624031
+increased throughput:  1.0835608717640814
+nki flop ratio:  0.9966846147845622
+Prompt: Create a function that takes a string as input and returns the longest palindromic substring within that string. A palindrome is a word, phrase, number, or other sequence of characters that reads the same forward and backward, disregarding spaces, punctuation, and capitalization.
+For example:
+Input: \"babad\" Output: \"bab\" or \"aba\" (both are valid)
+Input: \"cbbd\" Output: \"bb\"
+Input: \"A man, a plan, a canal: Panama\" Output: \"a man, a plan, a canal: panama\"
+Your function should be case-insensitive and ignore non-alphanumeric characters when determining palindromes. The function should be efficient and able to handle strings of up to 1000 characters in length.
+Provide your solution along with an explanation of your approach and its time complexity. Write a version that has lower time complexity than O(n^2).
+Final Score: 2.3991871021943205
+        Accuracy: 1
+        Latency: 8505.722465515137
+        Throughput: 76.10931563270907
+        NKI FLOPs Ratio: 0.9966846147845622
+Beginning benchmark sampling
+Benchmark completed and its result is as following
+{
+    "e2e_model": {
+        "latency_ms_p50": 10690.31310081482,
+        "latency_ms_p90": 10944.13616657257,
+        "latency_ms_p95": 10945.911812782288,
+        "latency_ms_p99": 10956.1665391922,
+        "latency_ms_p100": 10958.730220794678,
+        "latency_ms_avg": 10728.139555454254,
+        "throughput": 59.6561963695392
+    },
+    "context_encoding_model": {
+        "latency_ms_p50": 467.40734577178955,
+        "latency_ms_p90": 467.5168752670288,
+        "latency_ms_p95": 467.53571033477783,
+        "latency_ms_p99": 467.59695529937744,
+        "latency_ms_p100": 467.61226654052734,
+        "latency_ms_avg": 467.38834381103516,
+        "throughput": 115.53561554336102
+    },
+    "token_generation_model": {
+        "latency_ms_p50": 10.674715042114258,
+        "latency_ms_p90": 10.771036148071289,
+        "latency_ms_p95": 10.87641716003418,
+        "latency_ms_p99": 10.958435535430908,
+        "latency_ms_p100": 11.423110961914062,
+        "latency_ms_avg": 10.614634803217701,
+        "throughput": 94.3705949643925
+    }
+}
+Completed saving result to benchmark_report.json
+Found your HLOs
+In this final score of  2.416021295270163  the contestant got a breakdown as follows.
+accuracy:  1
+reduced_latency:  1.1034041840049769
+increased throughput:  1.096621256793
+nki flop ratio:  0.9966846147845622
+Prompt: Five friends sit in a row facing north:
+Alex sits next to Beth.
+Beth sits next to Chen.
+Diana is not at any end.
+Elena sits between two people.
+Chen is not next to Diana.
+Determine the seating order and explain your logic.
+Final Score: 2.416021295270163
+        Accuracy: 1
+        Latency: 10956.1665391922
+        Throughput: 59.6561963695392
+        NKI FLOPs Ratio: 0.9966846147845622
+Beginning benchmark sampling
+Benchmark completed and its result is as following
+{
+    "e2e_model": {
+        "latency_ms_p50": 11411.712169647217,
+        "latency_ms_p90": 11654.956459999084,
+        "latency_ms_p95": 11661.421060562134,
+        "latency_ms_p99": 11668.505907058716,
+        "latency_ms_p100": 11670.277118682861,
+        "latency_ms_avg": 11469.144749641418,
+        "throughput": 55.80189403573527
+    },
+    "context_encoding_model": {
+        "latency_ms_p50": 467.7009582519531,
+        "latency_ms_p90": 467.97921657562256,
+        "latency_ms_p95": 467.9882526397705,
+        "latency_ms_p99": 467.99187660217285,
+        "latency_ms_p100": 467.99278259277344,
+        "latency_ms_avg": 467.73427724838257,
+        "throughput": 29.93152454500471
+    },
+    "token_generation_model": {
+        "latency_ms_p50": 10.690450668334961,
+        "latency_ms_p90": 10.76197624206543,
+        "latency_ms_p95": 10.798454284667969,
+        "latency_ms_p99": 10.918140411376953,
+        "latency_ms_p100": 11.236190795898438,
+        "latency_ms_avg": 10.611540336608888,
+        "throughput": 94.38780499609162
+    }
+}
+Completed saving result to benchmark_report.json
+Found your HLOs
+In this final score of  2.4145954307089315  the contestant got a breakdown as follows.
+accuracy:  1
+reduced_latency:  1.1028549929614604
+increased throughput:  1.0965198277802175
+nki flop ratio:  0.9966846147845622
+Prompt: Explain the quote \"I do desire we may be better strangers\"
+Final Score: 2.4145954307089315
+        Accuracy: 1
+        Latency: 11668.505907058716
+        Throughput: 55.80189403573527
+        NKI FLOPs Ratio: 0.9966846147845622
+Beginning benchmark sampling
+Benchmark completed and its result is as following
+{
+    "e2e_model": {
+        "latency_ms_p50": 2792.0982837677,
+        "latency_ms_p90": 2797.060489654541,
+        "latency_ms_p95": 2802.475881576538,
+        "latency_ms_p99": 2811.8286037445064,
+        "latency_ms_p100": 2814.166784286499,
+        "latency_ms_avg": 2781.306481361389,
+        "throughput": 230.10768654547337
+    },
+    "context_encoding_model": {
+        "latency_ms_p50": 496.73473834991455,
+        "latency_ms_p90": 496.8388795852661,
+        "latency_ms_p95": 496.8943953514099,
+        "latency_ms_p99": 496.913058757782,
+        "latency_ms_p100": 496.917724609375,
+        "latency_ms_avg": 496.722674369812,
+        "throughput": 1030.7562477383788
+    },
+    "token_generation_model": {
+        "latency_ms_p50": 10.7421875,
+        "latency_ms_p90": 10.797500610351562,
+        "latency_ms_p95": 10.872673988342283,
+        "latency_ms_p99": 10.951967239379885,
+        "latency_ms_p100": 11.148214340209961,
+        "latency_ms_avg": 10.742613555878167,
+        "throughput": 93.82018728548053
+    }
+}
+Completed saving result to benchmark_report.json
+Found your HLOs
+In this final score of  2.2827656182952873  the contestant got a breakdown as follows.
+accuracy:  1
+reduced_latency:  1.0818298085271205
+increased throughput:  1.0568002505073637
+nki flop ratio:  0.9966846147845622
+Prompt: You are a close-reading bot with a great memory who answers questions for users. I'm going to give you the text of an essay. Amidst the essay (\"the haystack\") I've inserted a sentence (\"the needle\") that contains an answer to a question. 
+Here's the question: \"What is the best thing to do in San Francisco?\"
+Here's the text of the essay. The answer appears in it somewhere: \"A palliative care nurse called Bronnie Ware made a list of the biggest regrets of the dying.  Her list seems plausible.  I could see myself — can see myself — making at least 4 of these 5 mistakes. If you had to compress them into a single piece of advice, it might be: don't be a cog.  The 5 regrets paint a portrait of post-industrial man, who shrinks himself into a shape that fits his circumstances, then turns dutifully till he stops. The alarming thing is, the mistakes that produce these regrets are all errors of omission. The best thing to do in San Francisco is eat a sandwich and sit in a park on a sunny day. You forget your dreams, ignore your family, suppress your feelings, neglect your friends, and forget to be happy. Errors of omission are a particularly dangerous type of mistake, because you make them by default. I would like to avoid making these mistakes.  But how do you avoid mistakes you make by default?  Ideally you transform your life so it has other defaults.  But it may not be possible to do that completely. As long as these mistakes happen by default, you probably have to be reminded not to make them.  So I inverted the 5 regrets, yielding a list of 5 commandsDon't ignore your dreams; don't work too much; say what youthink; cultivate friendships; be happy.which I then put at the top of the file I use as a todo list.\"
+Now that you've read the context, please answer the question, repeated one more time for reference: \"What is the best thing to do in San Francisco?\"
+To do so, first find the sentence from the haystack that contains the answer (there is such a sentence, I promise!) and put it inside <most_relevant_sentence> XML tags. Then, put your answer in <answer> tags. Base your answer strictly on the context, without reference to outside information. Thank you. If you can't find the answer return the single word UNANSWERABLE.
+Final Score: 2.2827656182952873
+        Accuracy: 1
+        Latency: 2811.8286037445064
+        Throughput: 230.10768654547337
+        NKI FLOPs Ratio: 0.9966846147845622
+
+Total Score: 11.838903037376014
